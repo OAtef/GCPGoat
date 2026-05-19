@@ -1,0 +1,37 @@
+name: Security Scan (Checkov)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  checkov-scan:
+    name: Checkov Static Code Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Run Checkov Action
+        uses: bridgecrewio/checkov-action@master
+        with:
+          # Scans the entire repository
+          directory: .
+          # Frameworks present in GCPGoat (Terraform, Helm, Serverless, etc.)
+          framework: Terraform 
+          # Outputs the results in a human-readable format in the logs
+          output_format: cli
+          # If set to true, it won't fail the build pipeline on findings
+          soft_fail: false 
+          
+      - name: Upload SARIF results (Optional)
+        uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
+        with:
+          # To use this, change output_format above to: cli,sarif
+          # and output_file_path: console,results.sarif
+          sarif_file: results.sarif
+          category: checkov
