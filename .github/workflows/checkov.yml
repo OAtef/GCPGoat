@@ -21,7 +21,7 @@ jobs:
           # Scans the entire repository
           directory: .
           # Frameworks present in GCPGoat (Terraform, Helm, Serverless, etc.)
-          framework: Terraform 
+          framework: terraform
           # Outputs the results in a human-readable format in the logs
           output_format: cli
           # If set to true, it won't fail the build pipeline on findings
